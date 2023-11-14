@@ -1,0 +1,44 @@
+[tool.poetry]
+name = "rss"
+version = "0.1.0"
+description = "Support software for REDCap"
+authors = ["Brotman Baty Institute"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+alembic = "^1.12.1"
+fastapi = "^0.104.1"
+fastapi-sqlalchemy = "^0.2.1"
+google-auth = "^2.23.4"
+more-itertools = "^10.1.0"
+psycopg2 = "^2.9.9"
+pycap = "^2.6.0"
+pydantic = "^2.5.0"
+uvicorn = "^0.24.0.post1"
+arq = "^0.25.0"
+
+[tool.poetry.group.test]
+optional = false
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.4.3"
+testcontainers = "^3.7.1"
+
+[tool.poetry.group.dev]
+optional = false
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.1.5"
+pyright = "^1.1.335"
+black = "^23.11.0"
+pre-commit = "^3.5.0"
+watchfiles = "^0.21.0"
+
+# TODO
+[tool.poetry.scripts]
+#app = "uvicorn src.rss.server_main:app --reload"
+#worker = "arq app.worker.WorkerSettings --watch ./"
+#compose-up = "docker-compose -f docker-compose-dev.yml up --build"
+#compose-down = "docker-compose -f docker-compose.local.yml down --remove-orphans"

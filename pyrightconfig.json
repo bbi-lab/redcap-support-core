@@ -1,0 +1,31 @@
+{
+    "include": [
+      "src",
+      "tests",
+    ],
+
+    "exclude": [
+      "**/__pycache__"
+    ],
+
+    "ignore": [
+
+    ],
+
+    "defineConstant": {
+
+    },
+
+    "reportMissingImports": true,
+    "reportMissingTypeStubs": false,
+    "typeCheckingMode": "basic",
+
+    "extraPaths": [],
+
+    "pythonVersion": "3.9",
+    "pythonPlatform": "Linux",
+
+    "executionEnvironments": [
+
+    ]
+  }

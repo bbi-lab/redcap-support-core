@@ -1,0 +1,19 @@
+FROM python:3.11
+
+ENV PYTHONFAULTHANDLER=1 \
+  PYTHONUNBUFFERED=1 \
+  PYTHONHASHSEED=random \
+  PYTHONDONTWRITEBYTECODE=1
+
+
+RUN pip3 install poetry==1.7.0
+
+COPY ./pyproject.toml /pyproject.toml
+COPY ./poetry.lock /poetry.lock
+
+RUN poetry config virtualenvs.create false
+RUN poetry install --without dev --without test --no-root
+
+COPY ./src /src
+
+CMD ["arq", "src.rss.worker.WorkerSettings", "--watch", "./src"]
