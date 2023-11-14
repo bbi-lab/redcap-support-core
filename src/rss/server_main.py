@@ -4,7 +4,7 @@ import uvicorn
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.rss.routers import (
+from rss.routers import (
     report,
     project,
     authentication,

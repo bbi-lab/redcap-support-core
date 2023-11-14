@@ -4,7 +4,7 @@ from uuid import UUID
 
 from pydantic import ConfigDict
 
-from src.rss.view_models.base.base import BaseModel
+from rss.view_models.base.base import BaseModel
 
 
 class ReportBase(BaseModel):

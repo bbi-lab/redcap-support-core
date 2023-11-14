@@ -1,4 +1,4 @@
-from src.rss.view_models.base.base import BaseModel
+from rss.view_models.base.base import BaseModel
 
 
 class TokenBase(BaseModel):

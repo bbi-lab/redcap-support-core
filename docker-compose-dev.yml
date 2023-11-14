@@ -2,11 +2,11 @@ version: "3"
 
 services:
   app:
-    image: redcap-support-api/redcap-support-api:dev
+    image: redcap-support-core/redcap-support-api:dev
     build:
       context: .
       dockerfile: Dockerfile.dev
-    command: bash -c "uvicorn src.rss.server_main:app --host 0.0.0.0 --port 8000 --reload"
+    command: bash -c "uvicorn rss.server_main:app --host 0.0.0.0 --port 8000 --reload"
     env_file:
       - env/.env.dev
     environment:
@@ -27,7 +27,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.worker.dev
-    command: bash -c "arq src.rss.worker.WorkerSettings --watch ./src"
+    command: bash -c "arq rss.worker.WorkerSettings --watch ./src"
     env_file:
       - env/.env.dev
     environment:

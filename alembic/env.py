@@ -15,8 +15,8 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-from src.rss.db.base import Base  # noqa: E402
-from src.rss.models import *  # noqa: E402, F403
+from rss.db.base import Base  # noqa: E402
+from rss.models import *  # noqa: E402, F403
 
 # add your model's MetaData object here
 # for 'autogenerate' support

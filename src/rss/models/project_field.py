@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import DateTime, Integer, String, ForeignKey, Index
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 
-from src.rss.db.base import Base
+from rss.db.base import Base
 
 
 class ProjectField(Base):

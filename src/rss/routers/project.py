@@ -3,22 +3,22 @@ from fastapi.encoders import jsonable_encoder
 from redcap.project import Project
 from sqlalchemy.orm import Session
 
-from src.rss import deps
-from src.rss.lib.authorization import require_authorized_admin
-from src.rss.lib.redcap_interface import (
+from rss import deps
+from rss.lib.authorization import require_authorized_admin
+from rss.lib.redcap_interface import (
     build_event_map,
     build_form_field_map,
     build_repeat_instruments_map,
     extract,
 )
-from src.rss.models.event import Event
-from src.rss.models.instrument import Instrument
-from src.rss.models.project_arm import ProjectArm
-from src.rss.models.project_event import ProjectEvent, event_instrument_association
-from src.rss.models.project_field import ProjectField
-from src.rss.models.project_instrument import ProjectInstrument
-from src.rss.models.user import User
-from src.rss.view_models import project
+from rss.models.event import Event
+from rss.models.instrument import Instrument
+from rss.models.project_arm import ProjectArm
+from rss.models.project_event import ProjectEvent, event_instrument_association
+from rss.models.project_field import ProjectField
+from rss.models.project_instrument import ProjectInstrument
+from rss.models.user import User
+from rss.view_models import project
 
 # Router for handling all interactions with REDCap
 router = APIRouter(

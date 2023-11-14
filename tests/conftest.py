@@ -6,16 +6,16 @@ from sqlalchemy.orm.session import Session
 from testcontainers.core.waiting_utils import wait_for_logs
 from testcontainers.postgres import PostgresContainer
 
-from src.rss.deps import get_project, get_db
-from src.rss.lib.authentication import authenticate_current_user
-from src.rss.lib.authorization import (
+from rss.deps import get_project, get_db
+from rss.lib.authentication import authenticate_current_user
+from rss.lib.authorization import (
     authorize_current_user,
     require_authorized_admin,
     require_authorized_editor,
     require_authorized_viewer,
 )
-from src.rss.server_main import app
-from src.rss.db.base import Base
+from rss.server_main import app
+from rss.db.base import Base
 
 from tests.utils import (
     override_authenticated_user,

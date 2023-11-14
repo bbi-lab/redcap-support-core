@@ -6,7 +6,7 @@ from sqlalchemy import DateTime, String
 from sqlalchemy.orm import mapped_column, Mapped
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 
-from src.rss.db.base import Base
+from rss.db.base import Base
 
 
 class Report(Base):

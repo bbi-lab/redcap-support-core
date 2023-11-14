@@ -3,8 +3,8 @@ from typing import Optional
 
 from pydantic import ConfigDict
 
-from src.rss.view_models.base.base import BaseModel
-from src.rss.view_models.project import ProjectEventSimple, ProjectInstrumentSimple
+from rss.view_models.base.base import BaseModel
+from rss.view_models.project import ProjectEventSimple, ProjectInstrumentSimple
 
 
 class EventBase(BaseModel):

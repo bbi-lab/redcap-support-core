@@ -3,9 +3,9 @@ from typing import AsyncGenerator, Generator
 from arq import create_pool
 from redcap.project import Project
 
-from src.rss.db.session import SessionLocal
-from src.rss.queue.worker import RedisQueue
-from src.rss.lib.redcap_interface import redcap_environment
+from rss.db.session import SessionLocal
+from rss.queue.worker import RedisQueue
+from rss.lib.redcap_interface import redcap_environment
 
 
 def get_db() -> Generator:

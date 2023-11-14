@@ -1,6 +1,6 @@
 from datetime import datetime
-from src.rss.models.user import User
-from src.rss.models.authorized_user import AuthorizedUser
+from rss.models.user import User
+from rss.models.authorized_user import AuthorizedUser
 
 
 TEST_USER = User(

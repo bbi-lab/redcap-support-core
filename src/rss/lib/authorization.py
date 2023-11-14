@@ -1,12 +1,12 @@
 from fastapi import Depends
-from src.rss.lib.authentication import authenticate_current_user
-from src.rss.models.authorized_user import AuthorizedUser
-from src.rss.models.user import User
+from rss.lib.authentication import authenticate_current_user
+from rss.models.authorized_user import AuthorizedUser
+from rss.models.user import User
 from typing import Union
-from src.rss import deps
+from rss import deps
 from sqlalchemy.orm import Session
 
-from src.rss.lib.exceptions.authorization import UnauthorizedUserError
+from rss.lib.exceptions.authorization import UnauthorizedUserError
 
 ## Authorization Deps
 

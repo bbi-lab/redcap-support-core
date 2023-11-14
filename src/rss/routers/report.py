@@ -6,20 +6,20 @@ from sqlalchemy.orm import Session, selectinload
 
 from typing import Union
 
-from src.rss import deps
-from src.rss.lib.authorization import (
+from rss import deps
+from rss.lib.authorization import (
     require_authorized_editor,
     require_authorized_viewer,
 )
-from src.rss.lib.querybuilder.filter import filter
-from src.rss.models.event import Event
-from src.rss.models.instrument import Instrument
-from src.rss.models.project_event import ProjectEvent
-from src.rss.models.project_field import ProjectField
-from src.rss.models.project_instrument import ProjectInstrument
-from src.rss.models.report import Report
-from src.rss.models.user import User
-from src.rss.view_models import event, instrument, report
+from rss.lib.querybuilder.filter import filter
+from rss.models.event import Event
+from rss.models.instrument import Instrument
+from rss.models.project_event import ProjectEvent
+from rss.models.project_field import ProjectField
+from rss.models.project_instrument import ProjectInstrument
+from rss.models.report import Report
+from rss.models.user import User
+from rss.view_models import event, instrument, report
 
 # Router for handling all interactions with REDCap
 router = APIRouter(

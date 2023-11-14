@@ -3,8 +3,8 @@ from datetime import datetime
 from sqlalchemy import DateTime, Integer, String, Boolean, Index
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 
-from src.rss.db.base import Base
-from src.rss.models.project_event import event_instrument_association
+from rss.db.base import Base
+from rss.models.project_event import event_instrument_association
 
 
 class ProjectInstrument(Base):

@@ -1,7 +1,7 @@
 from typing import Union
 from sqlalchemy.orm import Session
 
-from src.rss.models.event import Event
+from rss.models.event import Event
 from .aggregators import aggregate_criterion, VALID_AGGREGATORS
 
 # Type definition for criterions list

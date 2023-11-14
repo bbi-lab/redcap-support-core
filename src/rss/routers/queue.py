@@ -3,13 +3,13 @@ from arq import ArqRedis
 from arq.jobs import JobDef
 from fastapi import APIRouter, Depends
 
-from src.rss.deps import get_queue
-from src.rss.queue.worker import BACKGROUND_FUNCTIONS, BACKGROUND_CRONJOBS
-from src.rss.lib.authorization import (
+from rss.deps import get_queue
+from rss.queue.worker import BACKGROUND_FUNCTIONS, BACKGROUND_CRONJOBS
+from rss.lib.authorization import (
     require_authorized_viewer,
     require_authorized_admin,
 )
-from src.rss.models.authorized_user import AuthorizedUser
+from rss.models.authorized_user import AuthorizedUser
 
 # Router for handling all interactions with ARQ Worker
 router = APIRouter(

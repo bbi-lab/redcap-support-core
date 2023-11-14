@@ -7,10 +7,10 @@ from google.auth.exceptions import GoogleAuthError
 from google.auth.transport import requests
 
 from sqlalchemy.orm import Session
-from src.rss.models.user import User
-from src.rss import deps
-from src.rss.view_models import authentication
-from src.rss.lib.exceptions.authentication import (
+from rss.models.user import User
+from rss import deps
+from rss.view_models import authentication
+from rss.lib.exceptions.authentication import (
     UnauthenticatedUserError,
 )
 

@@ -4,10 +4,10 @@ from sqlalchemy import Boolean, Integer
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.query import Query
 
-from src.rss.models.event import Event
-from src.rss.models.instrument import Instrument
-from src.rss.models.project_field import ProjectField
-from src.rss.models.project_instrument import ProjectInstrument
+from rss.models.event import Event
+from rss.models.instrument import Instrument
+from rss.models.project_field import ProjectField
+from rss.models.project_instrument import ProjectInstrument
 
 # add aggregators/operators here as they become valid
 Operator = Literal["==", "!=", ">=", "<=", ">", "<"]

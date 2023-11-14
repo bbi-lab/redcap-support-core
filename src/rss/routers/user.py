@@ -1,11 +1,11 @@
 from typing import Union
 from fastapi import APIRouter, Depends
-from src.rss.lib.authorization import authorize_current_user
-from src.rss.models.authorized_user import AuthorizedUser
+from rss.lib.authorization import authorize_current_user
+from rss.models.authorized_user import AuthorizedUser
 
-from src.rss.models.user import User
-from src.rss.view_models import user
-from src.rss.lib.authentication import authenticate_current_user
+from rss.models.user import User
+from rss.view_models import user
+from rss.lib.authentication import authenticate_current_user
 
 # Router for handling all interactions with Google OAuth
 router = APIRouter(

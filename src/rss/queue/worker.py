@@ -2,7 +2,7 @@ import os
 from arq.connections import RedisSettings
 from arq import cron  # noqa: F401
 
-from src.rss.queue.tasks import test_task
+from rss.queue.tasks import test_task
 
 BACKGROUND_FUNCTIONS = [test_task]
 BACKGROUND_CRONJOBS = []
