@@ -16,4 +16,4 @@ RUN poetry install --without test --no-root
 
 COPY ./src /src
 
-CMD ["arq", "rss.worker.WorkerSettings", "--watch", "./src"]
+CMD ["arq", "src.rss.worker.WorkerSettings", "--watch", "./src"]
