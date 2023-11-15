@@ -2,15 +2,16 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import tuple_, any_
-from sqlalchemy.orm import Session, selectinload
+from sqlalchemy.orm import Session, selectinload, Query
 
-from typing import Union
+from typing import Union, Callable, Optional
 
 from rss import deps
 from rss.lib.authorization import (
     require_authorized_editor,
     require_authorized_viewer,
 )
+from rss.lib.exceptions.report import NoCustomCalculatorError
 from rss.lib.querybuilder.filter import filter
 from rss.models.event import Event
 from rss.models.instrument import Instrument
@@ -162,6 +163,12 @@ def render_report(
     uuid: UUID,
     db: Session = Depends(deps.get_db),
     user: User = Depends(require_authorized_viewer),
+    event_field_calculator: Optional[
+        Callable[[Session, Query[Event], list[str]], list[event.Event]]
+    ] = Depends(deps.get_event_calculator),
+    instrument_field_calculator: Optional[
+        Callable[[Session, Query[Instrument], list[str]], list[instrument.Instrument]]
+    ] = Depends(deps.get_instrument_calculator),
 ) -> tuple[
     list[Union[Event, event.Event]], list[Union[Instrument, instrument.Instrument]]
 ]:
@@ -232,18 +239,29 @@ def render_report(
         )
 
     # TODO: Allow calculated fields to be included within filter logic.
-    # if item.calculated_event_fields:
-    #     calculated_event_data = render_calculated_event_fields(
-    #         db, event_data, item.calculated_event_fields
-    #     )
-    # else:
-    #     calculated_event_data = []
-    # if item.calculated_instrument_fields:
-    #     calculated_instrument_data = render_calculated_instrument_fields(
-    #         db, instrument_data, item.calculated_instrument_fields
-    #     )
-    # else:
-    #     calculated_instrument_data = []
+    if item.calculated_event_fields and event_field_calculator is None:
+        raise NoCustomCalculatorError(
+            "Calculated event fields are defined on this report, but no field calculator was provided."
+        )
+
+    elif item.calculated_event_fields and event_field_calculator:
+        calculated_event_data = event_field_calculator(
+            db, event_data, item.calculated_event_fields
+        )
+    else:
+        calculated_event_data = []
+
+    if item.calculated_instrument_fields and instrument_field_calculator is None:
+        raise NoCustomCalculatorError(
+            "Calculated instrument fields are defined on this report, but no field calculator was provided."
+        )
+
+    elif item.calculated_instrument_fields and instrument_field_calculator:
+        calculated_instrument_data = instrument_field_calculator(
+            db, instrument_data, item.calculated_instrument_fields
+        )
+    else:
+        calculated_instrument_data = []
 
     if item.fields:
         event_data = event_data.filter(ProjectField.name.in_(item.fields))
@@ -265,7 +283,7 @@ def render_report(
                 field: row.data[field] for field in item.fields if field in row.data
             }
 
-    return [
-        [*event_data.all()],
-        [*instrument_data.all()],
-    ]  # type: ignore
+    return [*event_data.all(), *calculated_event_data], [
+        *instrument_data.all(),
+        *calculated_instrument_data,
+    ]
