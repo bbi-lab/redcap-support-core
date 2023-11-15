@@ -4,7 +4,6 @@ version = "0.1.0"
 description = "Support software for REDCap"
 authors = ["Brotman Baty Institute"]
 readme = "README.md"
-packages =[{include = "rss", from = "."}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
