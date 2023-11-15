@@ -4,7 +4,7 @@ from arq.jobs import JobDef
 from fastapi import APIRouter, Depends
 
 from rss.deps import get_queue
-from rss.queue.worker import BACKGROUND_FUNCTIONS, BACKGROUND_CRONJOBS
+from rss.rqueue.worker import BACKGROUND_FUNCTIONS, BACKGROUND_CRONJOBS
 from rss.lib.authorization import (
     require_authorized_viewer,
     require_authorized_admin,

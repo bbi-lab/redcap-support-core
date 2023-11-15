@@ -27,7 +27,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.worker.dev
-    command: bash -c "arq src.rss.worker.WorkerSettings --watch ./src/rss"
+    command: bash -c "arq rss.worker.WorkerSettings --watch ./rss"
     env_file:
       - env/.env.dev
     environment:

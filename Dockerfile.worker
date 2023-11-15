@@ -14,6 +14,6 @@ COPY ./poetry.lock /poetry.lock
 RUN poetry config virtualenvs.create false
 RUN poetry install --without dev --without test --no-root
 
-COPY ./src /src
+COPY ./rss /rss
 
-CMD ["arq", "src.rss.worker.WorkerSettings", "--watch", "./src"]
+CMD ["arq", "rss.worker.WorkerSettings", "--watch", "./rss"]

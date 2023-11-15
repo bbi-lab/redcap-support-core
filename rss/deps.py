@@ -4,7 +4,7 @@ from arq import create_pool
 from redcap.project import Project
 
 from rss.db.session import SessionLocal
-from rss.queue.worker import RedisQueue
+from rss.rqueue.worker import RedisQueue
 from rss.lib.redcap_interface import redcap_environment
 
 

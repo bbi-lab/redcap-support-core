@@ -14,10 +14,10 @@ RUN poetry install --without dev --without test --no-root && rm -rf $POETRY_CACH
 
 COPY ./alembic /code/alembic
 COPY ./alembic.ini /code/alembic.ini
-COPY ./src /code/src
+COPY ./rss /code/rss
 
 EXPOSE 8000
 
-ENV PYTHONPATH "${PYTHONPATH}:/code/src"
+ENV PYTHONPATH "${PYTHONPATH}:/code/rss"
 
 CMD ["uvicorn", "rss.server_main:app", "--host", "0.0.0.0", "--port", "8000"]
