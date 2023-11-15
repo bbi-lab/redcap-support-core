@@ -5,15 +5,15 @@ ENV PYTHONFAULTHANDLER=1 \
   PYTHONHASHSEED=random \
   PYTHONDONTWRITEBYTECODE=1
 
-
 RUN pip3 install poetry==1.7.0
+WORKDIR  /code
 
-COPY ./pyproject.toml /pyproject.toml
-COPY ./poetry.lock /poetry.lock
+COPY ./pyproject.toml /code/pyproject.toml
+COPY ./poetry.lock /code/poetry.lock
 
 RUN poetry config virtualenvs.create false
 RUN poetry install --without dev --without test --no-root
 
-COPY ./rss /rss
+COPY ./src/rss/* /code/rss
 
 CMD ["arq", "rss.worker.WorkerSettings", "--watch", "./rss"]
