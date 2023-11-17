@@ -128,18 +128,27 @@ def evaluate_criterion(
     criterion:
 
     """
+    # Fetch and validate instrument type
+    instrument = criterion.get("instrument")
+    if instrument is None:
+        raise ValueError(
+            "The `instrument` field in a criterion dictionary is required, and can not be `None`"
+        )
+    elif not isinstance(instrument, str):
+        raise ValueError(
+            "The `instrument` field in a criterion dictionary should be a string."
+        )
+
     # Fetch and validate field type
-    field_path = criterion.get("field")
-    if field_path is None:
+    field = criterion.get("field")
+    if field is None:
         raise ValueError(
             "The `field` field in a criterion dictionary is required, and can not be `None`"
         )
-    elif not isinstance(field_path, str):
+    elif not isinstance(field, str):
         raise ValueError(
-            "The `field` field in a criterion dictionary should be a string in the form `instrument.field`."
+            "The `field` field in a criterion dictionary should be a string."
         )
-    else:
-        instrument, field = _extract_path(field_path)
 
     # Fetch and validate operator type
     field_operator = criterion.get("operator")

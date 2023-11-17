@@ -287,3 +287,7 @@ def render_report(
         *instrument_data.all(),
         *calculated_instrument_data,
     ]
+
+
+def format_report_field():
+    pass
