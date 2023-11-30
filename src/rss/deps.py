@@ -1,6 +1,7 @@
 from typing import AsyncGenerator, Callable, Generator, Optional
 
 from arq import create_pool
+from fastapi import Query as FAQuery
 from redcap.project import Project
 from sqlalchemy.orm import Session, Query
 
@@ -14,6 +15,16 @@ from rss.view_models import event, instrument
 ########################################################
 # Core Dependencies
 ########################################################
+
+
+class PaginatedParams:
+    def __init__(
+        self, page: int = FAQuery(1, ge=1), per_page: int = FAQuery(2500, ge=0)
+    ):
+        self.page = page
+        self.per_page = per_page
+        self.limit = per_page * page
+        self.offset = (page - 1) * per_page
 
 
 def get_db() -> Generator:
@@ -48,9 +59,7 @@ async def get_queue() -> AsyncGenerator:
 
 
 def get_event_calculator() -> (
-    Optional[
-        Callable[[Session, Query[Event], list[str]], list[event.Event]]
-    ]
+    Optional[Callable[[Session, Query[Event], list[str]], list[event.Event]]]
 ):
     return None
 

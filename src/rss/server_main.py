@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from requests import Request
 from starlette import status
 from starlette.responses import JSONResponse
+from rss.lib.middlewares import PaginationMiddleware
 from rss.routers import (
     report,
     project,
@@ -30,6 +31,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(PaginationMiddleware)
 
 app.include_router(ping.router)
 app.include_router(queue.router)
@@ -38,12 +40,13 @@ app.include_router(report.router)
 app.include_router(project.router)
 app.include_router(user.router)
 
+
 @app.exception_handler(NoCustomCalculatorError)
 async def validation_exception_handler(request: Request, exc: NoCustomCalculatorError):
     return JSONResponse(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        content={"message": str(exc)}
+        status_code=status.HTTP_501_NOT_IMPLEMENTED, content={"message": str(exc)}
     )
+
 
 # If the application is not already being run within a uvicorn server, start it here.
 if __name__ == "__main__":
