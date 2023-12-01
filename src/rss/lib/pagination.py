@@ -33,8 +33,10 @@ class Paginator:
         return str(url)
 
     def get_response(self) -> dict:
+        count = self._get_total_count()
         return {
-            "count": self._get_total_count(),
+            "count": count,
+            "pages": self._get_number_of_pages(count),
             "next_page": self._get_next_page(),
             "previous_page": self._get_previous_page(),
             "items": [
@@ -48,7 +50,7 @@ class Paginator:
     def _get_number_of_pages(self, count: int) -> int:
         rest = count % self.params.per_page
         quotient = count // self.params.per_page
-        return quotient if not rest else quotient + 1
+        return max(1, quotient) if not rest else quotient + 1
 
     def _get_total_count(self) -> int:
         count = self.session.scalar(
