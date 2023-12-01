@@ -23,14 +23,16 @@ class Paginator:
             return
 
         url = self.request.url.include_query_params(page=self.params.page + 1)
-        return str(url)
+
+        # TODO: Manually set HTTPS scheme as URL since load balanced requests are HTTP based
+        return str(url.replace(scheme="https"))
 
     def _get_previous_page(self) -> Optional[str]:
         if self.params.page == 1 or self.params.page > self.number_of_pages + 1:
             return
 
         url = self.request.url.include_query_params(page=self.params.page - 1)
-        return str(url)
+        return str(url.replace(scheme="https"))
 
     def get_response(self) -> dict:
         count = self._get_total_count()
