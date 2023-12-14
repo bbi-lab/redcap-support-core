@@ -7,7 +7,8 @@ from rss.db.base import Base
 
 
 class ProjectField(Base):
-    __tablename__ = "project_field"  # type: ignore
+    __tablename__ = "project_field"
+    __table_args__ = (Index("project_field_name_idx", "name", unique=True),)
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     instrument_id: Mapped[int] = mapped_column(
@@ -23,5 +24,3 @@ class ProjectField(Base):
     )
 
     instrument = relationship("ProjectInstrument", back_populates="fields")
-
-    Index("project_field_name_idx", "name", unique=True)

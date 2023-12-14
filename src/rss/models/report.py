@@ -22,9 +22,9 @@ class Report(Base):
     instruments: Mapped[list[str]] = mapped_column(JSONB, nullable=False)
     fields: Mapped[list[str]] = mapped_column(JSONB, nullable=False)
     filters: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False)
-    calculated_event_fields: Mapped[list[str]] = mapped_column(JSONB, nullable=True)
+    calculated_event_fields: Mapped[list[str]] = mapped_column(JSONB, nullable=False)
     calculated_instrument_fields: Mapped[list[str]] = mapped_column(
-        JSONB, nullable=True
+        JSONB, nullable=False
     )
 
     created = mapped_column(DateTime, nullable=True, default=datetime.now)

@@ -7,7 +7,7 @@ from rss.db.base import Base
 
 
 class User(Base):
-    __tablename__ = "user"  # type: ignore
+    __tablename__ = "user"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
 

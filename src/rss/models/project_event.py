@@ -24,7 +24,8 @@ event_instrument_association = Table(
 
 
 class ProjectEvent(Base):
-    __tablename__ = "project_event"  # type: ignore
+    __tablename__ = "project_event"
+    __table_args__ = (Index("project_event_name_idx", "name", unique=True),)
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     arm_id: Mapped[int] = mapped_column(
@@ -56,5 +57,3 @@ class ProjectEvent(Base):
     #
     # event_records = relationship("Event", back_populates="event")
     # instrument_records = relationship("Instrument", back_populates="event")
-
-    Index("project_event_name_idx", "name", unique=True)

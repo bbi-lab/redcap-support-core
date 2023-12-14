@@ -7,7 +7,7 @@ from rss.db.base import Base
 
 
 class AuthorizedUser(Base):
-    __tablename__ = "authorized_user"  # type: ignore
+    __tablename__ = "authorized_user"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
 

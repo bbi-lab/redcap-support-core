@@ -8,7 +8,8 @@ from rss.models.project_event import event_instrument_association
 
 
 class ProjectInstrument(Base):
-    __tablename__ = "project_instrument"  # type: ignore
+    __tablename__ = "project_instrument"
+    __table_args__ = (Index("project_instrument_name_idx", "name", unique=True),)
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String, nullable=False)
@@ -31,5 +32,3 @@ class ProjectInstrument(Base):
     # See comment in ./project_event.py
     # event_records = relationship("Event", back_populates="instrument")
     # instrument_records = relationship("Instrument", back_populates="instrument")
-
-    Index("project_instrument_name_idx", "name", unique=True)

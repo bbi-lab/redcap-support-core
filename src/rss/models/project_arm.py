@@ -7,7 +7,7 @@ from rss.db.base import Base
 
 
 class ProjectArm(Base):
-    __tablename__ = "project_arm"  # type: ignore
+    __tablename__ = "project_arm"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String, nullable=False)
