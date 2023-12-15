@@ -13,10 +13,13 @@ from rss.lib.redcap_interface import (
 )
 from rss.models.event import Event
 from rss.models.instrument import Instrument
-from rss.models.project_arm import ProjectArm
-from rss.models.project_event import ProjectEvent, event_instrument_association
-from rss.models.project_field import ProjectField
-from rss.models.project_instrument import ProjectInstrument
+from rss.models.project import (
+    ProjectArm,
+    ProjectEvent,
+    ProjectInstrument,
+    ProjectField,
+    event_instrument_association,
+)
 from rss.models.user import User
 from rss.view_models import project
 

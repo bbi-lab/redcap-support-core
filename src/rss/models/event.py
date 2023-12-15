@@ -5,6 +5,7 @@ from sqlalchemy.orm import mapped_column, Mapped, relationship
 from sqlalchemy.dialects.postgresql import JSONB
 
 from rss.db.base import Base
+from rss.models.project import ProjectEvent, ProjectInstrument
 
 
 class Event(Base):
@@ -36,6 +37,6 @@ class Event(Base):
         DateTime, nullable=True, default=datetime.now, onupdate=datetime.now()
     )
 
-    # See comment in ./project_event.py. For now, this is fine as a one way relationship
-    event = relationship("ProjectEvent")
-    instrument = relationship("ProjectInstrument")
+    # See comment in ./project.py. For now, this is fine as a one way relationship
+    event: Mapped[ProjectEvent] = relationship("ProjectEvent")
+    instrument: Mapped[ProjectInstrument] = relationship("ProjectInstrument")
