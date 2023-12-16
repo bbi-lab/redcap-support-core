@@ -1,2 +1,2 @@
-async def test_task(ctx) -> bool:
-    return True
+async def dummy_task(ctx) -> None:
+    return None

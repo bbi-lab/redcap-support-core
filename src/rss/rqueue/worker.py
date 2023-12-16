@@ -2,9 +2,10 @@ import os
 from arq.connections import RedisSettings
 from arq import cron  # noqa: F401
 
-from rss.rqueue.tasks import test_task
+from rss.rqueue.tasks import dummy_task
 
-BACKGROUND_FUNCTIONS = [test_task]
+# ARQ requires at least one task on startup.
+BACKGROUND_FUNCTIONS = [dummy_task]
 BACKGROUND_CRONJOBS = []
 
 REDIS_IP = os.getenv("REDIS_IP") or "localhost"
