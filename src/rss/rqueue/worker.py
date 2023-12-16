@@ -2,9 +2,10 @@ import os
 from arq.connections import RedisSettings
 from arq import cron  # noqa: F401
 
-from rss.rqueue.tasks import test_task
+from rss.rqueue.tasks import dummy_task
 
-BACKGROUND_FUNCTIONS = [test_task]
+# ARQ requires at least one task on startup.
+BACKGROUND_FUNCTIONS = [dummy_task]
 BACKGROUND_CRONJOBS = []
 
 REDIS_IP = os.getenv("REDIS_IP") or "localhost"
@@ -34,3 +35,5 @@ class WorkerSettings:
     redis_settings = RedisQueue
     functions: list = BACKGROUND_FUNCTIONS
     cron_jobs: list = BACKGROUND_CRONJOBS
+
+    job_timeout = 5 * 60 * 60  # Keep jobs alive for a long while...

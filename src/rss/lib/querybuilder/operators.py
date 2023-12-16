@@ -6,8 +6,7 @@ from sqlalchemy.orm.query import Query
 
 from rss.models.event import Event
 from rss.models.instrument import Instrument
-from rss.models.project_field import ProjectField
-from rss.models.project_instrument import ProjectInstrument
+from rss.models.project import ProjectField, ProjectInstrument
 
 # add aggregators/operators here as they become valid
 Operator = Literal["==", "!=", ">=", "<=", ">", "<"]

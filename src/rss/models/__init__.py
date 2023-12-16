@@ -3,9 +3,6 @@ __all__ = [
     "event",
     "instrument",
     "report",
-    "project_arm",
-    "project_event",
-    "project_field",
-    "project_instrument",
+    "project",
     "user",
 ]

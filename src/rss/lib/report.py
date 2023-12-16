@@ -8,9 +8,7 @@ from rss.lib.exceptions.report import NoCustomCalculatorError
 from rss.lib.querybuilder.filter import filter
 from rss.models.event import Event
 from rss.models.instrument import Instrument
-from rss.models.project_event import ProjectEvent
-from rss.models.project_field import ProjectField
-from rss.models.project_instrument import ProjectInstrument
+from rss.models.project import ProjectEvent, ProjectInstrument, ProjectField
 from rss.models.report import Report
 from rss.view_models import event, instrument
 
