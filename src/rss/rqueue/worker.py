@@ -35,3 +35,5 @@ class WorkerSettings:
     redis_settings = RedisQueue
     functions: list = BACKGROUND_FUNCTIONS
     cron_jobs: list = BACKGROUND_CRONJOBS
+
+    job_timeout = 5 * 60 * 60  # Keep jobs alive for a long while...
