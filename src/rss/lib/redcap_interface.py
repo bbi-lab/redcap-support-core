@@ -1,7 +1,7 @@
 import logging
 import os
 from enum import Enum
-from typing import Optional, Union
+from typing import Optional, Union, Generator
 from more_itertools import batched
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -106,7 +106,7 @@ def build_repeat_instruments_map(redcap_project: Project) -> dict[str, str]:
 
 def export_records_in_batch(
     redcap_project, batches: Optional[list[tuple[int]]] = None, **kwargs
-) -> list[dict[str, str]]:
+) -> Generator[list[dict[str, str]], None, None]:
     """
     Export REDCap project records in batches. Kwargs may be any kwarg accepted
     by the Pycap `export_records` function.
@@ -119,14 +119,18 @@ def export_records_in_batch(
         return redcap_project.export_records(**kwargs)
 
     records = []
+    total_exported = 0
     for batch in batches:
         logger.debug(
             f"Fetching batch {batch[0]}-{batch[-1]} of data with arguments {kwargs}."
         )
-        records.extend(redcap_project.export_records(records=batch, **kwargs))
+        records = redcap_project.export_records(records=batch, **kwargs)
+        total_exported += len(records)
+        yield records
 
-    logger.info(f"Fetched {len(records)} REDCap records via API.")
-    return records
+    logger.info(
+        f"Done fetching {total_exported} REDCap records via API with arguments {kwargs}."
+    )
 
 
 def upsert_record_data(
@@ -196,9 +200,9 @@ def upsert_record_data(
             f"Adding event from record {item['record_id']} within event {item['event_id']}, instrument {item['instrument_id']} (repeat instance {item['repeat_instance']})."
         )
 
-    # Bulk upsert all items in batches of 10000 to avoid EOF errors due to buffer size.
+    # Bulk upsert all items in batches of 5000 to avoid EOF errors due to buffer size.
     if items:
-        for n, batch in enumerate(batched(items, 10000)):
+        for n, batch in enumerate(batched(items, 2500)):
             insert_stmt = insert(Model).values(batch)
             on_conflict = insert_stmt.on_conflict_do_update(
                 constraint=constraint,
@@ -282,15 +286,18 @@ def relational_redcap(redcap_project: Project, db: Session) -> None:
 
             created_instruments = {
                 **created_instruments,
-                **add_all_instruments_to_event(project_event, instruments),
+                **add_all_instruments_to_event(
+                    project_event, instruments, created_instruments
+                ),
             }
 
         return created_instruments
 
     def add_all_instruments_to_event(
-        project_event: ProjectEvent, instruments: list[str]
+        project_event: ProjectEvent,
+        instruments: list[str],
+        created_instruments: dict[str, ProjectInstrument],
     ) -> dict[str, ProjectInstrument]:
-        created_instruments: dict[str, ProjectInstrument] = {}
 
         logger.debug(
             f"Adding {len(instruments)} within {project_event.name} to project."
@@ -348,6 +355,9 @@ def relational_redcap(redcap_project: Project, db: Session) -> None:
         instrument_fields: Union[dict[str, str], dict[str, list[str]]],
     ):
         instrument_name = instrument_fields.get(field["original_field_name"])
+
+        if isinstance(instrument_name, list):
+            raise ValueError("Instrument Fields were provided with a reverse mapping.")
 
         # Handle things like <survey_name>_complete, which are for some reason
         # not surfaced by instrument field mappings.
@@ -449,52 +459,49 @@ def relational_refresh(
     else:
         batches = None
 
-    logger.debug(
-        f"Refreshing {len(events_to_refresh)} events in {len(batches)} batches."
-    )
+    logger.debug(f"Refreshing {len(events_to_refresh)} events.")
     for event in events_to_refresh:
         logger.debug(
             f"Refreshing {len(event.instruments)} instruments within event {event}."
         )
         for instrument in event.instruments:
             logger.info(f"Working on {event.name}, {instrument.name}")
-            refreshed_records = export_records_in_batch(
+            for record_batch in export_records_in_batch(
                 redcap_project, batches, events=[event.name], forms=[instrument.name]
-            )
+            ):
+                logger.debug(f"Reformatting {len(record_batch)} prior to upsert.")
+                refreshed_records = [
+                    format_redcap_record(
+                        redcap_project, record, event.name, instrument.name
+                    )
+                    for record in record_batch
+                ]
 
-            logger.debug(f"Reformatting {len(refreshed_records)} prior to upsert.")
-            refreshed_records = [
-                format_redcap_record(
-                    redcap_project, record, event.name, instrument.name
-                )
-                for record in refreshed_records
-            ]
+                # A record will be a `Form` class if it is repeating. All other records are
+                # aggregated at the event level, so will be of class `Event`.
+                if instrument.repeating:
+                    upserts = upsert_record_data(
+                        db,
+                        refreshed_records,
+                        Instrument,
+                        "instrument_record_id_repeat_instance_event_id_instrument_id_key",
+                    )
+                else:
+                    upserts = upsert_record_data(
+                        db,
+                        refreshed_records,
+                        Event,
+                        "event_record_id_repeat_instance_event_id_instrument_id_key",
+                    )
 
-            # A record will be a `Form` class if it is repeating. All other records are
-            # aggregated at the event level, so will be of class `Event`.
-            if instrument.repeating:
-                upserts = upsert_record_data(
-                    db,
-                    refreshed_records,
-                    Instrument,
-                    "instrument_record_id_repeat_instance_event_id_instrument_id_key",
-                )
-            else:
-                upserts = upsert_record_data(
-                    db,
-                    refreshed_records,
-                    Event,
-                    "event_record_id_repeat_instance_event_id_instrument_id_key",
-                )
-
-            refreshed_events += upserts
+                refreshed_events += upserts
 
     logger.info(f"Successfully refreshed {refreshed_events}.")
 
 
 def format_redcap_record(
     project: Project, record: dict[str, str], event_name: str, form_name: str
-) -> dict[str, str]:
+) -> dict[str, Union[str, dict[str, str]]]:
     record_id = record[project.def_field]
     logger.debug(
         f"Reformatting record {record_id} in event {event_name}, instrument {form_name}."
@@ -517,7 +524,7 @@ def format_redcap_record(
     record.pop(project.def_field)
     record.pop("redcap_repeat_instance")
 
-    record = {
+    reformatted_record = {
         "record_id": record_id,
         "event_name": event_name,
         "form_name": form_name,
@@ -528,4 +535,4 @@ def format_redcap_record(
     logger.debug(
         f"Successfully reformatted record {record_id} in event {event_name}, instrument {form_name}, repeat instance {repeat_instance}."
     )
-    return record
+    return reformatted_record

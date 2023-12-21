@@ -179,14 +179,20 @@ def refresh_project_data(
     """
     # Split export of whole project into 10 batches
     next_record = int(redcap_project.generate_next_record_name())
-    batch_size = math.ceil(next_record / 10)
+    batch_size = math.ceil(next_record / 20)
 
     logger.info(f"Refreshing {next_record} records in batches of {batch_size}.")
 
     relational_redcap(redcap_project, db)
     db.commit()
 
-    logger.info("Done building project structure. Fetching data.")
+    logger.info("Done building project structure. Clearing project data.")
+
+    db.query(Event).delete()
+    db.query(Instrument).delete()
+    db.flush()
+
+    logger.info("Done clearing existing project data. Refreshing data.")
 
     # Commit as we go within this function, to avoid OOM errors on large transactions.
     relational_refresh(redcap_project, db, batch_size)
