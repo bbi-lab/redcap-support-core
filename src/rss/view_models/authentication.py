@@ -1,3 +1,4 @@
+from typing import Optional
 from rss.view_models.base.base import BaseModel
 
 
@@ -13,12 +14,12 @@ class TokenAuthenticated(BaseModel):
     iat: int
     iss: str
     sub: str
-    azp: str
     email: str
-    email_verified: bool
-    family_name: str
-    given_name: str
-    hd: str
-    locale: str
-    name: str
-    picture: str
+
+    azp: Optional[str]
+    email_verified: Optional[bool]
+    family_name: Optional[str]
+    given_name: Optional[str]
+    hd: Optional[str]
+    name: Optional[str]
+    picture: Optional[str]
